@@ -745,7 +745,7 @@ choice
 
 	config MTK_WIFI_MODE_AP
 		tristate "AP"
-		default y
+#		default y
 		select MTK_MT_AP_SUPPORT
 
 	config MTK_WIFI_MODE_STA
