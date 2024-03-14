@@ -40,7 +40,9 @@ define KernelPackage/crypto-aead
   KCONFIG:= \
 	CONFIG_CRYPTO_AEAD \
 	CONFIG_CRYPTO_AEAD2
-  FILES:=$(LINUX_DIR)/crypto/aead.ko
+  FILES:= \
+	  $(LINUX_DIR)/crypto/aead.ko \
+	  $(LINUX_DIR)/crypto/geniv.ko@ge5.10
   AUTOLOAD:=$(call AutoLoad,09,aead,1)
   $(call AddDepends/crypto, +kmod-crypto-null)
 endef
@@ -93,6 +95,18 @@ define KernelPackage/crypto-ccm
 endef
 
 $(eval $(call KernelPackage,crypto-ccm))
+
+
+define KernelPackage/crypto-chacha20poly1305
+  TITLE:=ChaCha20-Poly1305 AEAD support, RFC7539 (used by strongSwan IPsec VPN)
+  DEPENDS:=+kmod-crypto-aead +kmod-crypto-manager
+  KCONFIG:=CONFIG_CRYPTO_CHACHA20POLY1305
+  FILES:=$(LINUX_DIR)/crypto/chacha20poly1305.ko
+  AUTOLOAD:=$(call AutoLoad,09,chacha20poly1305)
+  $(call AddDepends/crypto)
+endef
+
+$(eval $(call KernelPackage,crypto-chacha20poly1305))
 
 
 define KernelPackage/crypto-cmac
@@ -637,6 +651,7 @@ define KernelPackage/crypto-misc
   TITLE:=Other CryptoAPI modules
   DEPENDS:=+kmod-crypto-xts
   KCONFIG:= \
+	CONFIG_CRYPTO_USER_API_ENABLE_OBSOLETE=y \
 	CONFIG_CRYPTO_CAMELLIA_X86_64 \
 	CONFIG_CRYPTO_BLOWFISH_X86_64 \
 	CONFIG_CRYPTO_TWOFISH_X86_64 \
@@ -790,7 +805,10 @@ $(eval $(call KernelPackage,crypto-rmd160))
 
 define KernelPackage/crypto-rng
   TITLE:=CryptoAPI random number generation
-  DEPENDS:=+kmod-crypto-hash +kmod-crypto-hmac +kmod-crypto-sha256
+  DEPENDS:=+kmod-crypto-hash +kmod-crypto-hmac \
+	   +(LINUX_5_4||LINUX_5_10):kmod-crypto-sha256 \
+	   +(LINUX_5_15||LINUX_6_1||LINUX_6_6):kmod-crypto-sha512 \
+	   +LINUX_6_6:kmod-crypto-sha3
   KCONFIG:= \
 	CONFIG_CRYPTO_DRBG \
 	CONFIG_CRYPTO_DRBG_HMAC=y \
