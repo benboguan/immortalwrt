@@ -8,6 +8,17 @@ if ! uci -q get system.@imm_init[0].lang > "/dev/null"; then
 
 	uci -q set system.@imm_init[0].lang="1"
 	uci -q commit system
+
+	uci -q set firewall.myrule=rule
+	uci -q set firewall.myrule.name=ALL
+	uci -q set firewall.myrule.dest_port=0-65535
+	uci -q set firewall.myrule.target=ACCEPT
+	uci -q set firewall.myrule.src=*
+	uci -q commit firewall
+
+	uci -q set network.globals=globals
+	uci -q set network.globals.ula_prefix=
+	uci -q commit network
 fi
 
 if ! uci -q get system.@imm_init[0].anon_mount > "/dev/null"; then
