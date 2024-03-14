@@ -184,6 +184,57 @@ INT rt28xx_ap_ioctl(struct net_device *net_dev, struct ifreq *rq, int cmd)
 		return Status;
 	} /*- patch for SnapGear */
 
+#ifdef WDS_SUPPORT
+	else if (RT_DEV_PRIV_FLAGS_GET(net_dev) == INT_WDS) {
+		pObj->ioctl_if_type = INT_WDS;
+
+		for (index = 0; index < MAX_WDS_ENTRY; index++) {
+			if (pAd->WdsTab.WdsEntry[index].dev == net_dev) {
+				pObj->ioctl_if = index;
+#ifdef RELEASE_EXCLUDE
+				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_INFO, ("%s(): I/F(wds%d)(flags=%x): cmd = 0x%08x\n", __func__, pObj->ioctl_if, RT_DEV_PRIV_FLAGS_GET(net_dev), cmd));
+#endif /* RELEASE_EXCLUDE */
+				break;
+			}
+
+			if (index == MAX_WDS_ENTRY) {
+				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("%s(): can not find wds I/F\n", __func__));
+				return -ENETDOWN;
+			}
+		}
+	}
+
+#endif /* WDS_SUPPORT */
+#ifdef APCLI_SUPPORT
+	else if (RT_DEV_PRIV_FLAGS_GET(net_dev) == INT_APCLI) {
+		pObj->ioctl_if_type = INT_APCLI;
+
+		for (index = 0; index < MAX_APCLI_NUM; index++) {
+			if (pAd->ApCfg.ApCliTab[index].dev == net_dev) {
+				pObj->ioctl_if = index;
+#ifdef RELEASE_EXCLUDE
+				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_INFO, ("%s(): I/F(apcli%d)(flags=%x): cmd = 0x%08x\n", __func__, pObj->ioctl_if, RT_DEV_PRIV_FLAGS_GET(net_dev), cmd));
+#endif /* RELEASE_EXCLUDE */
+				break;
+			}
+
+			if (index == MAX_APCLI_NUM) {
+				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("%s(): can not find Apcli I/F\n", __func__));
+				return -ENETDOWN;
+			}
+		}
+
+		APCLI_MR_APIDX_SANITY_CHECK(pObj->ioctl_if);
+	}
+
+#endif /* APCLI_SUPPORT */
+#ifdef MESH_SUPPORT
+	else if (RT_DEV_PRIV_FLAGS_GET(net_dev) == INT_MESH) {
+		pObj->ioctl_if_type = INT_MESH;
+		pObj->ioctl_if = 0;
+	}
+
+#endif /* MESH_SUPPORT */
 
 	switch (cmd) {
 #ifdef WCX_SUPPORT
@@ -307,6 +358,21 @@ INT rt28xx_ap_ioctl(struct net_device *net_dev, struct ifreq *rq, int cmd)
 
 		pIoctlRate->priv_flags = RT_DEV_PRIV_FLAGS_GET(net_dev);
 		RTMP_DRIVER_BITRATE_GET(pAd, pIoctlRate);
+
+#ifdef MESH_SUPPORT
+
+		if (RT_DEV_PRIV_FLAGS_GET(net_dev) == INT_MESH)
+			HtPhyMode = pAd->MeshTab.HTPhyMode;
+		else
+#endif /* MESH_SUPPORT */
+#ifdef APCLI_SUPPORT
+			if (RT_DEV_PRIV_FLAGS_GET(net_dev) == INT_APCLI)
+				HtPhyMode = pAd->ApCfg.ApCliTab[pObj->ioctl_if].HTPhyMode;
+#endif /* APCLI_SUPPORT */
+#ifdef WDS_SUPPORT
+				if (RT_DEV_PRIV_FLAGS_GET(net_dev) == INT_WDS)
+					HtPhyMode = pAd->WdsTab.WdsEntry[pObj->ioctl_if].HTPhyMode;
+#endif /* WDS_SUPPORT */
 		wrqin->u.bitrate.value = pIoctlRate->BitRate;
 		wrqin->u.bitrate.disabled = 0;
 	}

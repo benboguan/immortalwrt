@@ -22,7 +22,8 @@ HAS_WIFI_SPECTRUM_SUPPORT=y
 # Support MTK 2.4G 256QAM
 HAS_G_BAND_256QAM=y
 
-
+# Support BRCM 2.4G 256QAM
+HAS_BRCM_256QAM=y
 
 HAS_RSSI_FEEDBACK=n
 
@@ -54,13 +55,27 @@ HAS_APCLI=y
 # Roaming Enhance Support
 HAS_ROAMING_ENHANCE_SUPPORT=n
 
+#ifdef MWDS
+# Support Mixed WDS
+HAS_MWDS=y
+#endif // MWDS //
 
 
 # Support Air Monitor
 HAS_AIR_MONITOR=n
 
+#ifdef WPA_SUPPLICANT_SUPPORT
+# Support Wpa_Supplicant
+# i.e. wpa_supplicant -Dralink
+HAS_WPA_SUPPLICANT=n
+#endif // WPA_SUPPLICANT_SUPPORT //
 
 
+#ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
+# Support Native WpaSupplicant for Network Maganger
+# i.e. wpa_supplicant -Dwext
+HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=n
+#endif // NATIVE_WPA_SUPPLICANT_SUPPORT //
 
 #Support Net interface block while Tx-Sw queue full
 HAS_BLOCK_NET_IF=y
@@ -95,6 +110,10 @@ endif
 #Support WEPAUTO mode try Open first then shared
 HAS_WEPAUTO_OPEN_FIRST_SUPPORT=y
 
+#ifdef ETH_CONVERT_SUPPORT
+# Support for STA Ethernet Converter
+HAS_ETH_CONVERT_SUPPORT=n
+#endif // ETH_CONVERT_SUPPORT //
 
 # Support user specific transmit rate of Multicast packet.
 HAS_MCAST_RATE_SPECIFIC_SUPPORT=y
@@ -112,6 +131,10 @@ HAS_EXT_BUILD_CHANNEL_LIST=n
 #Support for IDS
 HAS_IDS_SUPPORT=y
 
+#ifdef MESH_SUPPORT
+#Support for MESH
+HAS_MESH_SUPPORT=y
+#endif // MESH_SUPPORT //
 
 #Support for Net-SNMP
 HAS_SNMP_SUPPORT=n
