@@ -88,9 +88,7 @@ define Device/rpi
   DEVICE_PACKAGES := \
 	cypress-firmware-43430-sdio \
 	brcmfmac-nvram-43430-sdio \
-	kmod-brcmfmac wpad-openssl \
-	kmod-i2c-bcm2835 kmod-spi-bcm2835 \
-	kmod-spi-bcm2835-aux
+	kmod-brcmfmac wpad-openssl
 endef
 ifeq ($(SUBTARGET),bcm2708)
   TARGET_DEVICES += rpi
@@ -129,9 +127,7 @@ define Device/rpi-2
 	brcmfmac-nvram-43430-sdio \
 	cypress-firmware-43455-sdio \
 	brcmfmac-nvram-43455-sdio \
-	kmod-brcmfmac wpad-openssl \
-	kmod-i2c-bcm2835 kmod-spi-bcm2835 \
-	kmod-spi-bcm2835-aux
+	kmod-brcmfmac wpad-openssl
   IMAGE/sysupgrade.img.gz := boot-common | boot-2708 | boot-2711 | sdcard-img | gzip | append-metadata
   IMAGE/factory.img.gz := boot-common | boot-2708 | boot-2711 | sdcard-img | gzip
 endef
@@ -165,9 +161,7 @@ define Device/rpi-3
 	brcmfmac-nvram-43430-sdio \
 	cypress-firmware-43455-sdio \
 	brcmfmac-nvram-43455-sdio \
-	kmod-brcmfmac wpad-openssl \
-	kmod-i2c-bcm2835 kmod-spi-bcm2835 \
-	kmod-spi-bcm2835-aux
+	kmod-brcmfmac wpad-openssl
 endef
 ifeq ($(SUBTARGET),bcm2710)
   TARGET_DEVICES += rpi-3
@@ -189,9 +183,6 @@ define Device/rpi-4
 	cypress-firmware-43455-sdio \
 	brcmfmac-nvram-43455-sdio \
 	kmod-brcmfmac wpad-openssl \
-	kmod-i2c-bcm2835 kmod-spi-bcm2835 \
-	kmod-spi-bcm2835-aux \
-	kmod-i2c-brcmstb \
 	kmod-usb-net-lan78xx \
 	kmod-r8169
   IMAGE/sysupgrade.img.gz := boot-common | boot-2711 | sdcard-img | gzip | append-metadata
@@ -219,9 +210,6 @@ define Device/rpi-5
 	cypress-firmware-43455-sdio \
 	brcmfmac-nvram-43455-sdio \
 	kmod-brcmfmac wpad-openssl \
-	kmod-i2c-bcm2835 kmod-spi-bcm2835 \
-	kmod-i2c-brcmstb \
-	kmod-i2c-designware-platform kmod-spi-dw-mmio \
 	kmod-hwmon-pwmfan kmod-thermal
   IMAGE/sysupgrade.img.gz := boot-common | sdcard-img | gzip | append-metadata
   IMAGE/factory.img.gz := boot-common | sdcard-img | gzip

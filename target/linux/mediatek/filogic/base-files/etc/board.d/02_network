@@ -9,7 +9,7 @@ mediatek_setup_interfaces()
 
 	case $board in
 	abt,asr3000|\
-	cmcc,rax3000m|\
+	cmcc,rax3000m*|\
 	cmcc,rax3000me|\
 	h3c,magic-nx30-pro|\
 	h3c,magic-nx30-pro-nmbm|\
@@ -35,6 +35,10 @@ mediatek_setup_interfaces()
 	arcadyan,mozart)
 		ucidef_set_interfaces_lan_wan "lan0 eth1" eth2
 		;;
+	huasifei,wh3000-pro|\
+	*Airpi*)
+                ucidef_set_interfaces_lan_wan "eth1 eth0" eth2
+                ;;
 	asus,rt-ax52|\
 	asus,rt-ax59u|\
 	cetron,ct3003|\
@@ -134,9 +138,6 @@ mediatek_setup_interfaces()
 	wavlink,wl-wn586x3)
 		ucidef_set_interfaces_lan_wan "lan1 lan2" eth1
 		;;
-	tplink,archer-ax80-v1)
-		ucidef_set_interfaces_lan_wan "lan0 lan1 lan2 lan3" eth1
-		;;
 	tplink,re6000xd)
 		ucidef_set_interface_lan "lan1 lan2 eth1"
 		;;
@@ -160,7 +161,7 @@ mediatek_setup_macs()
 	local lan_mac=""
 	local wan_mac=""
 	local label_mac=""
-
+	local wifi_mac=""
 	case $board in
 	acer,predator-w6|\
 	acer,predator-w6d|\
@@ -186,7 +187,6 @@ mediatek_setup_macs()
 		wan_mac=$(macaddr_add "$lan_mac" 1)
 		;;
 	mercusys,mr90x-v1|\
-	tplink,archer-ax80-v1|\
 	tplink,re6000xd)
 		label_mac=$(get_mac_binary "/tmp/tp_data/default-mac" 0)
 		lan_mac=$label_mac
@@ -218,7 +218,18 @@ mediatek_setup_macs()
 		label_mac=$(mtd_get_mac_binary "Factory" 0x4)
 		;;
 	esac
-
+		
+	wifi_mac="$(macaddr_add $lan_mac 1)"
+        sed -i '/MacAddress=$wifi_mac/d' /etc/wireless/mediatek/mt7981.dbdc.b0.dat
+        echo "MacAddress=$wifi_mac" >> /etc/wireless/mediatek/mt7981.dbdc.b0.dat
+        wifi_mac="$(macaddr_add $lan_mac 2)"
+        sed -i '/MacAddress=$wifi_mac/d' /etc/wireless/mediatek/mt7981.dbdc.b1.dat
+        echo "MacAddress=$wifi_mac" >> /etc/wireless/mediatek/mt7981.dbdc.b1.dat
+	sed -i '/MacAddress=$wifi_mac/d' /etc/wireless/mediatek/mt7986-ax60000.dbdc.b0.dat
+        echo "MacAddress=$wifi_mac" >> /etc/wireless/mediatek/mt7986-ax6000.dbdc.b0.dat
+	wifi_mac="$(macaddr_add $wifi_mac 1)"
+        sed -i '/MacAddress=$wifi_mac/d' /etc/wireless/mediatek/mt7986-ax6000.dbdc.b1.dat
+        echo "MacAddress=$wifi_mac" >> /etc/wireless/mediatek/mt7986-ax6000.dbdc.b1.dat
 	[ -n "$lan_mac" ] && ucidef_set_interface_macaddr "lan" $lan_mac
 	[ -n "$wan_mac" ] && ucidef_set_interface_macaddr "wan" $wan_mac
 	[ -n "$label_mac" ] && ucidef_set_label_macaddr $label_mac

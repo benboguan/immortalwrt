@@ -112,12 +112,15 @@ platform_do_upgrade() {
 	glinet,gl-x3000|\
 	glinet,gl-xe3000|\
 	huasifei,wh3000-emmc|\
+	*Airpi*|\
+	cmcc,rax3000m-emmc|\
 	smartrg,sdg-8612|\
 	smartrg,sdg-8614|\
 	smartrg,sdg-8622|\
 	smartrg,sdg-8632|\
 	smartrg,sdg-8733|\
 	smartrg,sdg-8733a|\
+	huasifei,wh3000-pro|\
 	smartrg,sdg-8734)
 		CI_KERNPART="kernel"
 		CI_ROOTPART="rootfs"
@@ -129,10 +132,6 @@ platform_do_upgrade() {
 	asus,tuf-ax6000)
 		CI_UBIPART="UBI_DEV"
 		CI_KERNPART="linux"
-		nand_do_upgrade "$1"
-		;;
-	cudy,wr3000h-v1)
-		CI_UBIPART="ubi"
 		nand_do_upgrade "$1"
 		;;
 	cudy,re3000-v1|\
@@ -148,7 +147,6 @@ platform_do_upgrade() {
 		;;
 	mercusys,mr80x-v3|\
 	mercusys,mr90x-v1|\
-	tplink,archer-ax80-v1|\
 	tplink,re6000xd)
 		CI_UBIPART="ubi0"
 		nand_do_upgrade "$1"
@@ -220,6 +218,7 @@ platform_check_image() {
 
 platform_copy_config() {
 	case "$(board_name)" in
+	*Airpi*|\
 	acer,predator-w6|\
 	acer,predator-w6d|\
 	acer,vero-w6m|\
@@ -229,6 +228,7 @@ platform_copy_config() {
 	glinet,gl-x3000|\
 	glinet,gl-xe3000|\
 	huasifei,wh3000-emmc|\
+	cmcc,rax3000m-emmc|\
 	jdcloud,re-cp-03|\
 	smartrg,sdg-8612|\
 	smartrg,sdg-8614|\
@@ -237,6 +237,7 @@ platform_copy_config() {
 	smartrg,sdg-8733|\
 	smartrg,sdg-8733a|\
 	smartrg,sdg-8734|\
+	huasifei,wh3000-pro|\
 	ubnt,unifi-6-plus)
 		emmc_copy_config
 		;;
