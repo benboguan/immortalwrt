@@ -169,6 +169,10 @@ mediatek_setup_macs()
 		wan_mac=$(mmc_get_mac_ascii u-boot-env WANMAC)
 		lan_mac=$(mmc_get_mac_ascii u-boot-env LANMAC)
 		;;
+	cudy,tr3000-v1)
+		wan_mac=$(mtd_get_mac_binary bdinfo 0xde00)
+                lan_mac=$(macaddr_add "$wan_mac" 1)
+		;;
 	bananapi,bpi-r3|\
 	bananapi,bpi-r3-mini|\
 	bananapi,bpi-r4)

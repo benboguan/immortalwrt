@@ -7,8 +7,8 @@ board_config_update
 
 case $board in
 *Airpi*)
-	ucidef_set_led_netdev "wlan2g" "WLAN2G" "airpi:2g" "ra0" "link"
-        ucidef_set_led_netdev "wlan5g" "WLAN5G" "airpi:2g" "rax0" "link"
+	ucidef_set_led_netdev "wlan2g" "WLAN2G" "airpi:2g" "rax0" "link"
+        ucidef_set_led_netdev "wlan5g" "WLAN5G" "airpi:2g" "ra0" "link"
 	;;
 abt,asr3000)
 	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1"

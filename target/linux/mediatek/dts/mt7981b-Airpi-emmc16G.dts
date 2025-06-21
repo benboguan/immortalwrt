@@ -15,6 +15,10 @@
 	compatible = "Airpi,emmc-16g", "mediatek,mt7981";
 
 	aliases {
+		led-boot = &sys_led;
+                led-failsafe = &sys_led;
+                led-running = &sys_led;
+                led-upgrade = &sys_led;
 		serial0 = &uart0;
 	};
 
@@ -39,6 +43,11 @@
 
 	gpio-leds {
 		compatible = "gpio-leds";
+
+		sys_led:led1{
+                        label = "airpi:sys";
+                        gpios = <&pio 13 GPIO_ACTIVE_LOW>;
+                };
 
 		wifi2g:led2{
                         label = "airpi:2g";
